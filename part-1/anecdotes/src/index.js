@@ -6,7 +6,10 @@ const mostVoted = (allVoted) => {
   const votes = Object.values(allVoted);
   const getMax = Math.max(...votes);
 
-  return anecdotes[votes.indexOf(getMax)];
+  return {
+    maxVotes: getMax,
+    maxAncedote: anecdotes[votes.indexOf(getMax)],
+  };
 };
 
 const randomize = (arr) => Math.floor(Math.random() * arr.length);
@@ -37,6 +40,7 @@ const App = ({ anecdotes }) => {
     JSON.stringify(votes) === JSON.stringify(initialVotes(anecdotes));
 
   const randomAnecdote = () => setSelected(randomize(anecdotes));
+  const { maxVotes, maxAncedote } = mostVoted(votes);
 
   return (
     <div>
@@ -49,7 +53,8 @@ const App = ({ anecdotes }) => {
       {!initView ? (
         <>
           <h2>Anecdote with most votes</h2>
-          <p>{mostVoted(votes)}</p>
+          <p>{maxAncedote}</p>
+          <p>has {maxVotes} votes</p>
         </>
       ) : (
         ''
