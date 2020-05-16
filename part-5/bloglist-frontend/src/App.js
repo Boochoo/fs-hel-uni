@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react'
 
 import './App.css'
 
-import Blog from './components/Blog'
+import Blog from './components/Blog/'
 import blogService from './services/blogs'
 import loginService from './services/login'
-import NotificationMessage from './components/NotificationMessage'
+import NotificationMessage from './components/NotificationMessage/'
+import LoginForm from './components/LoginForm/'
+import BlogForm from './components/BlogForm/'
 
 const App = () => {
   const initialNewBlogData = {
@@ -20,6 +22,7 @@ const App = () => {
   const [blogData, setBlogData] = useState(initialNewBlogData)
   const [notificationMessage, setNotificationMessage] = useState('')
   const [messageType, setMessageType] = useState('success')
+  const [showBlogForm, setShowBlogForm] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
@@ -44,7 +47,6 @@ const App = () => {
         password,
       })
 
-      console.log({ user })
       window.localStorage.setItem('loggedBlogUser', JSON.stringify(user))
       blogService.setToken(user.token)
 
@@ -54,111 +56,43 @@ const App = () => {
     } catch ({ response }) {
       setNotificationMessage(response.data.error)
       setMessageType('error')
-
       setTimeout(() => setNotificationMessage(null), 3000)
-
-      /* setTimeout(() => {
-        console.log('object')
-      }, 3000) */
     }
   }
 
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <h2>Login to application</h2>
-      <NotificationMessage message={notificationMessage} type={messageType} />
-      <div>
-        username
-        <input
-          type='text'
-          value={username}
-          name='Username'
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        password
-        <input
-          type='password'
-          value={password}
-          name='Password'
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type='submit'>login</button>
-    </form>
-  )
+  const { title, author, url } = blogData
 
-  const handleCreateNew = (event) => {
+  const sortByLikes = (data) =>
+    data.sort((a, b) => {
+      return b.likes - a.likes
+    })
+
+  const blogFormHandler = (event) => {
     event.preventDefault()
 
-    console.log(blogData)
+    blogService
+      .create(blogData)
+      .then((res) => {
+        setBlogs(blogs.concat(res))
+        setBlogData(initialNewBlogData)
 
-    blogService.create(blogData).then((res) => {
-      setBlogs(blogs.concat(res))
-      setBlogData(initialNewBlogData)
-
-      setNotificationMessage(
-        `a new blog ${blogData.title} by ${blogData.author} added`
-      )
-      setMessageType('success')
-
-      setTimeout(() => setNotificationMessage(null), 3000)
-    })
+        setNotificationMessage(`a new blog ${title} by ${author} added`)
+        setMessageType('success')
+        setShowBlogForm(!showBlogForm)
+        setTimeout(() => setNotificationMessage(null), 3000)
+      })
+      .catch((error) => {
+        if (!title || !author || !url) {
+          setNotificationMessage('title, author or url should not be empty!')
+        } else {
+          setNotificationMessage(error.message)
+        }
+        setMessageType('error')
+        setTimeout(() => setNotificationMessage(null), 3000)
+      })
   }
 
-  const blogForm = () => (
-    <div>
-      <h2>Blogs</h2>
-      <NotificationMessage message={notificationMessage} type={messageType} />
-      <p>{user.name} logged in</p>
-      <button type='submit' onClick={() => logOutUser()}>
-        logout
-      </button>
-
-      <h3>Create new</h3>
-      <form onSubmit={handleCreateNew}>
-        <div>
-          title
-          <input
-            type='text'
-            value={blogData.title}
-            name='title'
-            onChange={({ target }) =>
-              setBlogData({ ...blogData, [target.name]: target.value })
-            }
-          />
-        </div>
-        <div>
-          Author
-          <input
-            type='text'
-            value={blogData.author}
-            name='author'
-            onChange={({ target }) =>
-              setBlogData({ ...blogData, [target.name]: target.value })
-            }
-          />
-        </div>
-        <div>
-          Url
-          <input
-            type='text'
-            value={blogData.url}
-            name='url'
-            onChange={({ target }) =>
-              setBlogData({ ...blogData, [target.name]: target.value })
-            }
-          />
-        </div>
-        <button type='submit'>Create</button>
-      </form>
-
-      {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
-      ))}
-    </div>
-  )
+  console.log(blogs, user)
 
   const logOutUser = () => {
     window.localStorage.removeItem('loggedBlogUser')
@@ -166,11 +100,70 @@ const App = () => {
     blogService.setToken('')
   }
 
+  const blogRemoveHandler = async (blog) => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      await blogService.remove(blog.id)
+
+      const blogsAfterDeletion = await blogService.getAll()
+
+      setBlogs(blogsAfterDeletion)
+    }
+  }
+
   return (
     <div>
-      {user === null && loginForm()}
+      {user === null ? <h2>Login to application</h2> : <h2>Blogs</h2>}
+      <NotificationMessage message={notificationMessage} type={messageType} />
+      {user === null && (
+        <>
+          <LoginForm
+            handleSubmit={handleLogin}
+            username={username}
+            password={password}
+            usernameHandler={({ target }) => setUsername(target.value)}
+            passwordHandler={({ target }) => setPassword(target.value)}
+          />
+        </>
+      )}
 
-      {user && blogForm()}
+      {user && (
+        <div>
+          <p>{user.name} logged in</p>
+          <button type='submit' onClick={() => logOutUser()}>
+            logout
+          </button>
+
+          {showBlogForm && (
+            <BlogForm
+              handleSubmit={blogFormHandler}
+              formInputHandler={({ target }) =>
+                setBlogData({ ...blogData, [target.name]: target.value })
+              }
+            />
+          )}
+
+          <div>
+            <button
+              type='submit'
+              onClick={(e) => {
+                e.preventDefault()
+                setShowBlogForm(!showBlogForm)
+              }}
+            >
+              {!showBlogForm ? 'create new note' : 'cancel'}
+            </button>
+          </div>
+
+          {sortByLikes(blogs).map((blog) => (
+            <Blog
+              key={blog.id}
+              blog={blog}
+              user={user}
+              deleteHandler={blogRemoveHandler}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }
