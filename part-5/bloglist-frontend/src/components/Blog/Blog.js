@@ -32,18 +32,14 @@ const Blog = ({ blog, user, deleteHandler }) => {
       <div>
         <h1>{title}:</h1>
         <p>Author: {author} </p>
-        <button className='is-hidden' onClick={() => setShow(!show)}>
+        <button className='view-button' onClick={() => setShow(!show)}>
           {show ? 'hide' : 'view'}
         </button>
       </div>
       {show && (
         <>
           <p>
-            Likes: {like}{' '}
-            {/* <button className='like-button' onClick={updateLikes}>
-              like{' '}
-            </button> */}
-            <Button handler={updateLikes} />
+            Likes: {like} <Button id='like-button' handler={updateLikes} />
           </p>
           <a href={url}>{url} </a>
 

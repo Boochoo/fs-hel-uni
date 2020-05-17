@@ -9,7 +9,9 @@ const BlogForm = ({ handleSubmit, formInputHandler }) => (
     <Input inputName='title' inputHandle={formInputHandler} />
     <Input inputName='author' inputHandle={formInputHandler} />
     <Input inputName='url' inputHandle={formInputHandler} />
-    <button type='submit'>Create</button>
+    <button type='submit' id='create-button'>
+      Create
+    </button>
   </form>
 )
 

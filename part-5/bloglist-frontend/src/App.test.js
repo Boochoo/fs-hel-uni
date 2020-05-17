@@ -1,14 +1,13 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
-import { render, waitForElement } from '@testing-library/react'
+import { render } from '@testing-library/react'
 
 import App from './App'
 
 it('renders', async () => {
-  const component = render(<App />)
+  const { container } = render(<App />)
 
-  await waitForElement(() => component.getByText('Login to application'))
-
-  expect(component.container).toHaveTextContent('username')
-  expect(component.container).toHaveTextContent('password')
+  expect(container).toHaveTextContent('Login to application')
+  expect(container).toHaveTextContent('username')
+  expect(container).toHaveTextContent('password')
 })

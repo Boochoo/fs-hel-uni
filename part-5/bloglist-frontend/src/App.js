@@ -144,24 +144,27 @@ const App = () => {
 
           <div>
             <button
+              id='create-new-button'
               type='submit'
               onClick={(e) => {
                 e.preventDefault()
                 setShowBlogForm(!showBlogForm)
               }}
             >
-              {!showBlogForm ? 'create new note' : 'cancel'}
+              {!showBlogForm ? 'create new blog' : 'cancel'}
             </button>
           </div>
 
-          {sortByLikes(blogs).map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              user={user}
-              deleteHandler={blogRemoveHandler}
-            />
-          ))}
+          <div className='blogs-wrapper'>
+            {sortByLikes(blogs).map((blog) => (
+              <Blog
+                key={blog.id}
+                blog={blog}
+                user={user}
+                deleteHandler={blogRemoveHandler}
+              />
+            ))}
+          </div>
         </div>
       )}
     </div>

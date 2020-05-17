@@ -22,7 +22,9 @@ const LoginForm = ({
         value={password}
         inputHandle={passwordHandler}
       />
-      <button type='submit'>login</button>
+      <button type='submit' id='login-button'>
+        login
+      </button>
     </form>
   )
 }
