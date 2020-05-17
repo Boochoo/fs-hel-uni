@@ -92,8 +92,6 @@ const App = () => {
       })
   }
 
-  console.log(blogs, user)
-
   const logOutUser = () => {
     window.localStorage.removeItem('loggedBlogUser')
     setUser(null)
