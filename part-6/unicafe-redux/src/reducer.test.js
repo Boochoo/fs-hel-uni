@@ -7,7 +7,13 @@ describe('unicafe reducer', () => {
     ok: 0,
     bad: 0,
   }
-  const testRunner = (type, changedState) => {
+  /**  
+    @param type action type.
+    @param changedState the new object of the needed change
+
+    @returns {void} test result
+  */
+  const testRunner = (type: string, changedState: typeof initialState) => {
     const action = {
       type,
     }
