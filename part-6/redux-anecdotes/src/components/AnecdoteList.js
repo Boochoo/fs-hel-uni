@@ -1,51 +1,47 @@
 import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 import { vote } from '../reducers/anecdoteReducer'
 
-import { showNotification } from '../reducers/notificationReducer'
+import { setNotification } from '../reducers/notificationReducer'
 
-import './anecdote.css'
-
-const AnecdoteList = () => {
-  const anecdotes = useSelector((state) => {
-    const { anecdotes, filter } = state
-
-    const filteredAnecdotes = anecdotes.filter((a) =>
-      a.content.toLowerCase().includes(filter)
-    )
-
-    return filter === '' ? anecdotes : filteredAnecdotes
-  })
-  const dispatch = useDispatch()
-
-  const voteHandler = (id) => {
-    dispatch(vote(id))
-
-    setTimeout(() => {
-      dispatch(showNotification(''))
-    }, 3000)
-  }
-
+const AnecdoteList = ({ anecdotes, vote, setNotification }) => {
   return (
     <div className='container'>
-      {anecdotes.map(({ id, content, votes }) => (
-        <div key={id} className='grid-item'>
-          <div>{content}</div>
-          <div>
-            has {votes}
-            <button
-              onClick={() => {
-                voteHandler(id)
-                dispatch(showNotification(`you have voted for '${content}'`))
-              }}
-            >
-              vote
-            </button>
+      {anecdotes &&
+        anecdotes.map(({ id, content, votes }) => (
+          <div key={id} className='grid-item'>
+            <div>{content}</div>
+            <div>
+              has {votes}
+              <button
+                onClick={() => {
+                  vote(id)
+                  setNotification(`you have voted for '${content}'`, 2)
+                }}
+              >
+                vote
+              </button>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
     </div>
   )
 }
 
-export default AnecdoteList
+const mapStateToProps = (state) => {
+  const { anecdotes, filter } = state
+  const filteredAnecdotes = anecdotes.filter((a) =>
+    a.content.toLowerCase().includes(filter)
+  )
+
+  return {
+    anecdotes: filter === '' ? anecdotes : filteredAnecdotes,
+  }
+}
+
+const mapDispatchToProps = {
+  vote,
+  setNotification,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AnecdoteList)

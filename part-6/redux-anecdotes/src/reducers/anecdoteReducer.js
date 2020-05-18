@@ -1,47 +1,24 @@
-const anecdotesAtStart = [
-  { content: 'If it hurts, do it more often', votes: 0 },
-  {
-    content: 'Adding manpower to a late software project makes it later!',
-    votes: 0,
-  },
-  {
-    content:
-      'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
-    votes: 0,
-  },
-  {
-    content:
-      'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
-    votes: 0,
-  },
-  { content: 'Premature optimization is the root of all evil.', votes: 0 },
-  {
-    content:
-      'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
-    votes: 0,
-  },
-]
+import anecdoteService from '../services/anecdotes'
 
-const getId = () => (100000 * Math.random()).toFixed(0)
+export const initializeAnecdotes = () => {
+  return async (dispatch) => {
+    const anecdotes = await anecdoteService.getAll()
 
-const asObject = ({ content, votes }) => {
-  return {
-    content: content,
-    votes: votes,
-    id: getId(),
+    dispatch({
+      type: 'INIT_ANECDOTE',
+      data: anecdotes,
+    })
   }
 }
 
-const initialState = anecdotesAtStart.map(asObject)
-
 export const createAnecdote = (anecdote) => {
-  return {
-    type: 'ADD',
-    data: {
-      content: anecdote,
-      id: getId(),
-      votes: 0,
-    },
+  return async (dispatch) => {
+    const anecdotes = await anecdoteService.createNew(anecdote)
+
+    dispatch({
+      type: 'ADD',
+      data: anecdotes,
+    })
   }
 }
 export const vote = (id) => {
@@ -51,8 +28,11 @@ export const vote = (id) => {
   }
 }
 
-const reducer = (state = initialState, action) => {
+const reducer = (state = [], action) => {
   switch (action.type) {
+    case 'INIT_ANECDOTE':
+      return action.data
+
     case 'VOTE':
       const id = action.data.id
       const updatedObject = state.find((s) => s.id === id)
@@ -63,10 +43,12 @@ const reducer = (state = initialState, action) => {
       )
 
       return newState
+
     case 'ADD':
       const newData = action.data
 
       return [...state, newData]
+
     default:
       return state
   }

@@ -1,19 +1,18 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 
 import { createAnecdote } from '../reducers/anecdoteReducer'
 
-const AnecdoteForm = () => {
-  const dispatch = useDispatch()
-
-  const anecdoteHandler = (event) => {
+const AnecdoteForm = ({ createAnecdote }) => {
+  const anecdoteHandler = async (event) => {
     event.preventDefault()
+
     let { value } = event.target.anecdote
 
     if (value) {
-      dispatch(createAnecdote(value))
-
       event.target.anecdote.value = ''
+
+      createAnecdote(value)
     }
   }
   return (
@@ -29,4 +28,17 @@ const AnecdoteForm = () => {
   )
 }
 
-export default AnecdoteForm
+/* Simpler version: 
+  passing {createAnecdote} to connect
+
+  Alternative:
+*/
+const mapDispatchToProps = (dispatch) => {
+  return {
+    createAnecdote: (value) => {
+      dispatch(createAnecdote(value))
+    },
+  }
+}
+
+export default connect(null, mapDispatchToProps)(AnecdoteForm)
