@@ -15,18 +15,31 @@ const useField = (type) => {
   }
 }
 
+const url = 'https://restcountries.eu/rest/v2/name'
+
 const useCountry = (name) => {
   const [country, setCountry] = useState(null)
 
-  useEffect()
+  useEffect(() => {
+    axios
+      .get(`${url}/${name}`)
+      .then(({ data }) => {
+        setCountry({ data: data[0], found: true })
+      })
+      .catch((error) => {
+        if (!name) {
+          setCountry('')
+          return null
+        }
+        setCountry({ found: false })
+      })
+  }, [name])
 
   return country
 }
 
 const Country = ({ country }) => {
-  if (!country) {
-    return null
-  }
+  if (!country) return null
 
   if (!country.found) {
     return <div>not found...</div>
@@ -53,6 +66,7 @@ const App = () => {
 
   const fetch = (e) => {
     e.preventDefault()
+
     setName(nameInput.value)
   }
 
