@@ -22,7 +22,7 @@ const useCountry = (name) => {
 
   useEffect(() => {
     axios
-      .get(`${url}/${name}`)
+      .get(`${url}/${name}?fullText=true`)
       .then(({ data }) => {
         setCountry({ data: data[0], found: true })
       })
