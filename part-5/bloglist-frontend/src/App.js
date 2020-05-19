@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
+import { Container, TableContainer, Paper, Button } from '@material-ui/core'
+
 import './App.css'
 
 import Blog from './components/Blog/'
@@ -109,7 +111,7 @@ const App = () => {
   }
 
   return (
-    <div>
+    <Container>
       {user === null ? <h2>Login to application</h2> : <h2>Blogs</h2>}
       <NotificationMessage message={notificationMessage} type={messageType} />
       {user === null && (
@@ -127,9 +129,9 @@ const App = () => {
       {user && (
         <div>
           <p>{user.name} logged in</p>
-          <button type='submit' onClick={() => logOutUser()}>
+          <Button color='secondary' type='submit' onClick={() => logOutUser()}>
             logout
-          </button>
+          </Button>
 
           {showBlogForm && (
             <BlogForm
@@ -140,20 +142,19 @@ const App = () => {
             />
           )}
 
-          <div>
-            <button
-              id='create-new-button'
-              type='submit'
-              onClick={(e) => {
-                e.preventDefault()
-                setShowBlogForm(!showBlogForm)
-              }}
-            >
-              {!showBlogForm ? 'create new blog' : 'cancel'}
-            </button>
-          </div>
+          <Button
+            color='inherit'
+            id='create-new-button'
+            type='submit'
+            onClick={(e) => {
+              e.preventDefault()
+              setShowBlogForm(!showBlogForm)
+            }}
+          >
+            {!showBlogForm ? 'create new blog' : 'cancel'}
+          </Button>
 
-          <div className='blogs-wrapper'>
+          <TableContainer component={Paper} className='blogs-wrapper'>
             {sortByLikes(blogs).map((blog) => (
               <Blog
                 key={blog.id}
@@ -162,10 +163,10 @@ const App = () => {
                 deleteHandler={blogRemoveHandler}
               />
             ))}
-          </div>
+          </TableContainer>
         </div>
       )}
-    </div>
+    </Container>
   )
 }
 

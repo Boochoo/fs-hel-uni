@@ -1,11 +1,12 @@
 import React from 'react'
+import { Button } from '@material-ui/core'
 
-const Button = ({ handler }) => {
+const ButtonElement = ({ handler }) => {
   return (
-    <button className='like-button' onClick={handler}>
+    <Button variant='contained' color='primary' onClick={handler}>
       like
-    </button>
+    </Button>
   )
 }
 
-export default Button
+export default ButtonElement

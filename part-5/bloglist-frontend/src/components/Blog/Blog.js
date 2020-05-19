@@ -1,8 +1,16 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
+import {
+  TableRow,
+  TableCell,
+  TableBody,
+  Table,
+  Button,
+} from '@material-ui/core'
+
 import blogService from '../../services/blogs'
-import Button from './Button'
+import ButtonElement from './Button'
 
 const Blog = ({ blog, user, deleteHandler }) => {
   const { title, author, likes, url, id } = blog
@@ -28,27 +36,35 @@ const Blog = ({ blog, user, deleteHandler }) => {
   }
 
   return (
-    <div style={blogStyle} className='blog-item'>
-      <div>
-        <h1>{title}:</h1>
-        <p>Author: {author} </p>
-        <button className='view-button' onClick={() => setShow(!show)}>
-          {show ? 'hide' : 'view'}
-        </button>
-      </div>
-      {show && (
-        <>
-          <p>
-            Likes: {like} <Button id='like-button' handler={updateLikes} />
-          </p>
-          <a href={url}>{url} </a>
+    <TableRow style={blogStyle} className='blog-item'>
+      <Table>
+        <TableBody>
+          <TableCell>
+            <h1>{title}:</h1>
+            <p>Author: {author} </p>
+            <Button className='view-button' onClick={() => setShow(!show)}>
+              {show ? 'hide' : 'view'}
+            </Button>
 
-          {blog.user && user.username === blog.user.username && (
-            <button onClick={() => deleteHandler(blog)}>remove blog</button>
-          )}
-        </>
-      )}
-    </div>
+            {show && (
+              <>
+                <p>
+                  Likes: {like}{' '}
+                  <ButtonElement id='like-button' handler={updateLikes} />
+                </p>
+                <a href={url}>{url} </a>
+
+                {blog.user && user.username === blog.user.username && (
+                  <Button onClick={() => deleteHandler(blog)}>
+                    remove blog
+                  </Button>
+                )}
+              </>
+            )}
+          </TableCell>
+        </TableBody>
+      </Table>
+    </TableRow>
   )
 }
 

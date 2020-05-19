@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import { Button } from '@material-ui/core'
+
 import Input from '../Input/'
 
 const BlogForm = ({ handleSubmit, formInputHandler }) => (
@@ -9,9 +11,15 @@ const BlogForm = ({ handleSubmit, formInputHandler }) => (
     <Input inputName='title' inputHandle={formInputHandler} />
     <Input inputName='author' inputHandle={formInputHandler} />
     <Input inputName='url' inputHandle={formInputHandler} />
-    <button type='submit' id='create-button'>
+    <Button
+      variant='contained'
+      color='primary'
+      type='submit'
+      id='create-button'
+      style={{ marginTop: 10 }}
+    >
       Create
-    </button>
+    </Button>
   </form>
 )
 

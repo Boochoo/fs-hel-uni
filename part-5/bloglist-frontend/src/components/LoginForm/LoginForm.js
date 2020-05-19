@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Button } from '@material-ui/core'
 
 import Input from '../Input/'
 
@@ -22,9 +23,9 @@ const LoginForm = ({
         value={password}
         inputHandle={passwordHandler}
       />
-      <button type='submit' id='login-button'>
+      <Button color='primary' type='submit' id='login-button'>
         login
-      </button>
+      </Button>
     </form>
   )
 }
