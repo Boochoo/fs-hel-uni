@@ -8,6 +8,8 @@ import Anecdote from './Anecdote'
 import CreateNew from './CreateNew'
 import Footer from './Footer'
 
+import { Alert } from 'react-bootstrap'
+
 const intialState = [
   {
     content: 'If it hurts, do it more often',
@@ -60,11 +62,11 @@ const App = () => {
     : null
 
   return (
-    <div>
+    <div className='container'>
       <h1>Software anecdotes</h1>
       <Menu />
 
-      {notification && notification}
+      {notification && <Alert variant='success'>{notification}</Alert>}
 
       <Switch>
         <Route path='/anecdote/:id'>

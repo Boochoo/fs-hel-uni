@@ -1,4 +1,5 @@
 import React from 'react'
+import { Form, Button } from 'react-bootstrap'
 
 import { useField } from './hooks/userField'
 
@@ -35,24 +36,24 @@ const CreateNew = ({ addNew }) => {
   return (
     <div>
       <h2>create a new anecdote</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          content
-          <input {...content} />
-        </div>
-        <div>
-          author
-          <input {...author} />
-        </div>
-        <div>
-          url for more info
-          <input {...info} />
-        </div>
-        <button type='submit'>create</button>
-        <button type='button' onClick={() => clearForm()}>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group>
+          <Form.Label> content</Form.Label>
+          <Form.Control {...content} />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label> author</Form.Label>
+          <Form.Control {...author} />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label> url for more info</Form.Label>
+          <Form.Control {...info} />
+        </Form.Group>
+        <Button type='submit'>create</Button>
+        <Button type='button' onClick={() => clearForm()}>
           reset
-        </button>
-      </form>
+        </Button>
+      </Form>
     </div>
   )
 }
