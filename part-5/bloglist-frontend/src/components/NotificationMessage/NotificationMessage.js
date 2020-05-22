@@ -3,19 +3,13 @@ import PropTypes from 'prop-types'
 
 import { Alert } from '@material-ui/lab'
 
-const NotificationMessage = ({ message, type }) => {
-  if (!message) return null
-
-  return (
-    <Alert className={`message ${type === 'error' ? 'error' : 'success'}`}>
-      {message}
-    </Alert>
-  )
+const NotificationMessage = ({ message }) => {
+  return message && <Alert>{message}</Alert>
 }
 
 NotificationMessage.propTypes = {
-  message: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
+  message: PropTypes.string,
+  type: PropTypes.string,
 }
 
 export default NotificationMessage

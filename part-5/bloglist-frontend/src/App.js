@@ -1,34 +1,36 @@
 import React, { useState, useEffect } from 'react'
+import { Container } from '@material-ui/core'
+import { connect } from 'react-redux'
 
-import { Container, TableContainer, Paper, Button } from '@material-ui/core'
-
-import './App.css'
-
-import Blog from './components/Blog/'
+import BlogList from './components/BlogList/'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import NotificationMessage from './components/NotificationMessage/'
 import LoginForm from './components/LoginForm/'
 import BlogForm from './components/BlogForm/'
+import ButtonElement from './components/shared/ButtonElement'
 
-const App = () => {
+import { getBlogs, create } from './redux/actions/blogActions'
+import { useField } from './redux/useField'
+
+const App = ({ getBlogs, blogs, create, notification }) => {
   const initialNewBlogData = {
     title: '',
     author: '',
     url: '',
   }
-  const [blogs, setBlogs] = useState([])
+  // const [blogs, setBlogs] = useState([])
+  // const username = useField('')
+  // const password = useField('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [blogData, setBlogData] = useState(initialNewBlogData)
-  const [notificationMessage, setNotificationMessage] = useState('')
-  const [messageType, setMessageType] = useState('success')
   const [showBlogForm, setShowBlogForm] = useState(false)
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
-  }, [])
+    getBlogs()
+  }, [getBlogs])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
@@ -56,9 +58,9 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch ({ response }) {
-      setNotificationMessage(response.data.error)
-      setMessageType('error')
-      setTimeout(() => setNotificationMessage(null), 3000)
+      // setNotificationMessage(response.data.error)
+      // setMessageType('error')
+      // setTimeout(() => setNotificationMessage(null), 3000)
     }
   }
 
@@ -71,27 +73,11 @@ const App = () => {
 
   const blogFormHandler = (event) => {
     event.preventDefault()
+    if (!title || !author || !url) return null
 
-    blogService
-      .create(blogData)
-      .then((res) => {
-        setBlogs(blogs.concat(res))
-        setBlogData(initialNewBlogData)
-
-        setNotificationMessage(`a new blog ${title} by ${author} added`)
-        setMessageType('success')
-        setShowBlogForm(!showBlogForm)
-        setTimeout(() => setNotificationMessage(null), 3000)
-      })
-      .catch((error) => {
-        if (!title || !author || !url) {
-          setNotificationMessage('title, author or url should not be empty!')
-        } else {
-          setNotificationMessage(error.message)
-        }
-        setMessageType('error')
-        setTimeout(() => setNotificationMessage(null), 3000)
-      })
+    create(blogData)
+    setBlogData(initialNewBlogData)
+    setShowBlogForm(!showBlogForm)
   }
 
   const logOutUser = () => {
@@ -100,22 +86,12 @@ const App = () => {
     blogService.setToken('')
   }
 
-  const blogRemoveHandler = async (blog) => {
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
-      await blogService.remove(blog.id)
-
-      const blogsAfterDeletion = await blogService.getAll()
-
-      setBlogs(blogsAfterDeletion)
-    }
-  }
-
   return (
     <Container>
-      {user === null ? <h2>Login to application</h2> : <h2>Blogs</h2>}
-      <NotificationMessage message={notificationMessage} type={messageType} />
+      <NotificationMessage message={notification} />
       {user === null && (
         <>
+          <h2>Login to application</h2>
           <LoginForm
             handleSubmit={handleLogin}
             username={username}
@@ -128,10 +104,11 @@ const App = () => {
 
       {user && (
         <div>
-          <p>{user.name} logged in</p>
-          <Button color='secondary' type='submit' onClick={() => logOutUser()}>
-            logout
-          </Button>
+          <h2>Blogs</h2>
+          <div>
+            {user.name} logged in
+            <ButtonElement text='logout' handler={() => logOutUser()} />
+          </div>
 
           {showBlogForm && (
             <BlogForm
@@ -142,32 +119,33 @@ const App = () => {
             />
           )}
 
-          <Button
-            color='inherit'
+          <ButtonElement
             id='create-new-button'
-            type='submit'
-            onClick={(e) => {
+            text={!showBlogForm ? 'create new blog' : 'cancel'}
+            handler={(e) => {
               e.preventDefault()
               setShowBlogForm(!showBlogForm)
             }}
-          >
-            {!showBlogForm ? 'create new blog' : 'cancel'}
-          </Button>
+          />
 
-          <TableContainer component={Paper} className='blogs-wrapper'>
-            {sortByLikes(blogs).map((blog) => (
-              <Blog
-                key={blog.id}
-                blog={blog}
-                user={user}
-                deleteHandler={blogRemoveHandler}
-              />
-            ))}
-          </TableContainer>
+          <BlogList blogs={sortByLikes(blogs)} user={user} />
         </div>
       )}
     </Container>
   )
 }
 
-export default App
+const mapStateToProps = (state) => {
+  console.log({ state })
+  return {
+    blogs: state.blogs,
+    notification: state.notification,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  getBlogs: () => dispatch(getBlogs()),
+  create: (blog) => dispatch(create(blog)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Button } from '@material-ui/core'
 
 import Input from '../Input/'
+// import { useField } from '../../redux/useField'
 
 const LoginForm = ({
   handleSubmit,
@@ -23,7 +24,13 @@ const LoginForm = ({
         value={password}
         inputHandle={passwordHandler}
       />
-      <Button color='primary' type='submit' id='login-button'>
+      <Button
+        variant='outlined'
+        color='primary'
+        type='submit'
+        id='login-button'
+        style={{ marginTop: '1.25rem' }}
+      >
         login
       </Button>
     </form>

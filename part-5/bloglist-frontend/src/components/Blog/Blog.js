@@ -1,18 +1,15 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
-import {
-  TableRow,
-  TableCell,
-  TableBody,
-  Table,
-  Button,
-} from '@material-ui/core'
+import { Button, Card, Typography, CardContent } from '@material-ui/core'
 
 import blogService from '../../services/blogs'
-import ButtonElement from './Button'
+import ButtonElement from '../shared/ButtonElement'
 
-const Blog = ({ blog, user, deleteHandler }) => {
+import { deleteBlog } from '../../redux/actions/blogActions'
+
+const Blog = ({ blog, user, deleteBlog }) => {
   const { title, author, likes, url, id } = blog
 
   const [show, setShow] = useState(false)
@@ -21,7 +18,7 @@ const Blog = ({ blog, user, deleteHandler }) => {
   const updateLikes = () => {
     const updatedBlog = {
       ...blog,
-      likes: likes + 1,
+      likes: ++blog.likes,
     }
     blogService
       .update(id, updatedBlog)
@@ -35,43 +32,52 @@ const Blog = ({ blog, user, deleteHandler }) => {
       })
   }
 
+  const onDelete = (blog) => {
+    const message = `Remove blog ${blog.title} by ${blog.author}?`
+
+    if (window.confirm(message)) {
+      deleteBlog(blog)
+    }
+  }
+
   return (
-    <TableRow style={blogStyle} className='blog-item'>
-      <Table>
-        <TableBody>
-          <TableCell>
-            <h1>{title}:</h1>
-            <p>Author: {author} </p>
-            <Button className='view-button' onClick={() => setShow(!show)}>
-              {show ? 'hide' : 'view'}
-            </Button>
+    <Card style={blogStyle} className='blog-item'>
+      <CardContent>
+        <Typography color='primary' gutterBottom>
+          {title}:
+        </Typography>
+        <Typography>Author: {author} </Typography>
+        <Button className='view-button' onClick={() => setShow(!show)}>
+          {show ? 'hide' : 'view'}
+        </Button>
 
-            {show && (
-              <>
-                <p>
-                  Likes: {like}{' '}
-                  <ButtonElement id='like-button' handler={updateLikes} />
-                </p>
-                <a href={url}>{url} </a>
+        {show && (
+          <>
+            <div>
+              <Typography>Likes: {like}</Typography>
+              <ButtonElement
+                id='like-button'
+                text='like'
+                handler={updateLikes}
+              />
+            </div>
 
-                {blog.user && user.username === blog.user.username && (
-                  <Button onClick={() => deleteHandler(blog)}>
-                    remove blog
-                  </Button>
-                )}
-              </>
+            <a href={url}>{url} </a>
+
+            {blog.user && user.username === blog.user.username && (
+              <Button onClick={() => onDelete(blog)}>remove blog</Button>
             )}
-          </TableCell>
-        </TableBody>
-      </Table>
-    </TableRow>
+          </>
+        )}
+      </CardContent>
+    </Card>
   )
 }
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
-  deleteHandler: PropTypes.func,
+  deleteBlog: PropTypes.func,
 }
 
 const blogStyle = {
@@ -82,4 +88,8 @@ const blogStyle = {
   marginBottom: 5,
 }
 
-export default Blog
+const mapDispatchToProps = (dispatch) => ({
+  deleteBlog: (blogId) => dispatch(deleteBlog(blogId)),
+})
+
+export default connect(null, mapDispatchToProps)(Blog)
