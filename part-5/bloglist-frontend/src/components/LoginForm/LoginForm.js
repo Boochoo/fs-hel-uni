@@ -1,29 +1,39 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button } from '@material-ui/core'
+import { Button, TextField } from '@material-ui/core'
+import { connect } from 'react-redux'
 
-import Input from '../Input/'
-// import { useField } from '../../redux/useField'
+import { loginUser } from '../../redux/actions/blogActions'
+import { useField } from '../../redux/utils/useField'
+import { compose } from '../../redux/utils/utils'
 
-const LoginForm = ({
-  handleSubmit,
-  usernameHandler,
-  passwordHandler,
-  username,
-  password,
-}) => {
+const LoginForm = ({ loginUser }) => {
+  const { reset: resetUsername, ...username } = useField('username')
+  const { reset: resetPassword, ...password } = useField('password', 'password')
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+
+    loginUser({
+      username: username.value,
+      password: password.value,
+    })
+
+    if (username.value && password.value) {
+      compose(resetUsername, resetPassword)
+    }
+  }
+
   return (
     <form onSubmit={handleSubmit}>
-      <Input
-        inputName='username'
-        value={username}
-        inputHandle={usernameHandler}
-      />
-      <Input
-        inputName='password'
-        value={password}
-        inputHandle={passwordHandler}
-      />
+      <h2>Login to application</h2>
+      <div>
+        <TextField {...username} />
+      </div>
+
+      <div>
+        <TextField {...password} />
+      </div>
       <Button
         variant='outlined'
         color='primary'
@@ -38,11 +48,15 @@ const LoginForm = ({
 }
 
 LoginForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
-  usernameHandler: PropTypes.func.isRequired,
-  passwordHandler: PropTypes.func.isRequired,
-  username: PropTypes.string.isRequired,
-  password: PropTypes.string.isRequired,
+  loginUser: PropTypes.func.isRequired,
 }
 
-export default LoginForm
+const mapStateToProps = (state) => ({
+  user: state.login,
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  loginUser: (user) => dispatch(loginUser(user)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginForm)

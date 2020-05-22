@@ -19,3 +19,11 @@ export const loadAuth = () => {
     console.log(error)
   }
 }
+
+export const removeAuth = () => {
+  try {
+    window.localStorage.removeItem('loggedBlogUser')
+  } catch (error) {
+    console.log(error)
+  }
+}

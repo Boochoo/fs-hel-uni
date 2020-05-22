@@ -1,5 +1,17 @@
 import blogsService from '../../services/blogs'
-import { GET_BLOGS, CREATE_BLOG, NOTIFICATION, DELETE_BLOG } from './types'
+import loginService from '../../services/login'
+
+import {
+  GET_BLOGS,
+  CREATE_BLOG,
+  NOTIFICATION,
+  DELETE_BLOG,
+  LOGIN,
+  GET_TOKEN,
+  LOG_OUT,
+  CLEAR_FORM,
+} from './types'
+import { loadAuth, setAuth, removeAuth } from '../auth'
 
 export const getBlogs = () => {
   return async (dispatch) => {
@@ -63,10 +75,12 @@ export const deleteBlog = (blog) => {
         notification: `blog '${blog.title}' has been deleted`,
       })
     } catch (error) {
-      dispatch({
-        type: NOTIFICATION,
-        notification: error.message,
-      })
+      setTimeout(() => {
+        dispatch({
+          type: NOTIFICATION,
+          notification: '',
+        })
+      }, 2000)
     }
 
     setTimeout(() => {
@@ -75,5 +89,77 @@ export const deleteBlog = (blog) => {
         notification: '',
       })
     }, 2000)
+  }
+}
+
+export const initWithToken = () => {
+  return async (dispatch) => {
+    const userData = loadAuth()
+
+    if (userData) {
+      blogsService.setToken(userData.token)
+    } else {
+      blogsService.setToken('')
+    }
+
+    dispatch({
+      type: GET_TOKEN,
+      payload: userData,
+    })
+  }
+}
+
+export const loginUser = (user) => {
+  return async (dispatch) => {
+    try {
+      const userData = await loginService.login(user)
+
+      setAuth(userData)
+
+      dispatch({
+        type: LOGIN,
+        payload: userData,
+      })
+    } catch (error) {
+      if (!user.username || !user.password) {
+        dispatch({
+          type: NOTIFICATION,
+          notification: 'Username and password need to be filled',
+        })
+      } else {
+        dispatch({
+          type: NOTIFICATION,
+          notification: error.message,
+        })
+      }
+    }
+
+    setTimeout(() => {
+      dispatch({
+        type: NOTIFICATION,
+        notification: '',
+      })
+    }, 2000)
+  }
+}
+
+export const clearLoginToken = () => {
+  return async (dispatch) => {
+    await blogsService.setToken('')
+
+    removeAuth()
+
+    dispatch({
+      type: LOG_OUT,
+      payload: null,
+    })
+  }
+}
+
+export const clearForm = () => {
+  return async (dispatch) => {
+    dispatch({
+      type: CLEAR_FORM,
+    })
   }
 }

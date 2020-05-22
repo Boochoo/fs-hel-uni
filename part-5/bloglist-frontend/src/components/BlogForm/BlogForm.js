@@ -1,31 +1,73 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { Button, TextField } from '@material-ui/core'
 
-import { Button } from '@material-ui/core'
+import { create, clearForm } from '../../redux/actions/blogActions'
 
-import Input from '../Input/'
+import { useField } from '../../redux/utils/useField'
+import { compose } from '../../redux/utils/utils'
 
-const BlogForm = ({ handleSubmit, formInputHandler }) => (
-  <form onSubmit={handleSubmit}>
-    <h3>Create new</h3>
-    <Input inputName='title' inputHandle={formInputHandler} />
-    <Input inputName='author' inputHandle={formInputHandler} />
-    <Input inputName='url' inputHandle={formInputHandler} />
-    <Button
-      variant='contained'
-      color='primary'
-      type='submit'
-      id='create-button'
-      style={{ marginTop: 10 }}
-    >
-      Create
-    </Button>
-  </form>
-)
+import ButtonElement from '../shared/ButtonElement'
 
-BlogForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
-  formInputHandler: PropTypes.func.isRequired,
+const BlogForm = ({ create }) => {
+  const { reset: resetTitle, ...title } = useField('title')
+  const { reset: resetAuthor, ...author } = useField('author')
+  const { reset: resetUrl, ...url } = useField('url')
+
+  const [formVisibility, setFormVisibility] = useState(false)
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+
+    create({ title: title.value, author: author.value, url: url.value })
+
+    if (!title.value || !author.value || !url.value) return null
+
+    compose(resetTitle, resetAuthor, resetUrl)
+    setFormVisibility(!formVisibility)
+  }
+
+  return (
+    <>
+      {formVisibility && (
+        <form onSubmit={handleSubmit}>
+          <h3>Create new</h3>
+          <div>
+            <TextField {...title} />
+          </div>
+          <div>
+            <TextField {...author} />
+          </div>
+          <div>
+            <TextField {...url} />
+          </div>
+          <Button
+            variant='contained'
+            color='primary'
+            type='submit'
+            id='create-button'
+            style={{ marginTop: 10 }}
+          >
+            Create
+          </Button>
+        </form>
+      )}
+      <ButtonElement
+        id='create-new-button'
+        text={!formVisibility ? 'create new blog' : 'cancel'}
+        handler={(e) => {
+          e.preventDefault()
+          setFormVisibility(!formVisibility)
+        }}
+      />
+    </>
+  )
 }
 
-export default BlogForm
+BlogForm.propTypes = {
+  create: PropTypes.func.isRequired,
+  // formHandler: PropTypes.func.isRequired,
+}
+
+export default connect(null, { create, clearForm })(BlogForm)

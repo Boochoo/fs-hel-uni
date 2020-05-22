@@ -61,10 +61,9 @@ const Blog = ({ blog, user, deleteBlog }) => {
                 handler={updateLikes}
               />
             </div>
-
             <a href={url}>{url} </a>
 
-            {blog.user && user.username === blog.user.username && (
+            {blog.user && user.userData.username === blog.user.username && (
               <Button onClick={() => onDelete(blog)}>remove blog</Button>
             )}
           </>

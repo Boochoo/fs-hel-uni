@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux'
 
-import reducer, { notificationReducer } from './blogReducer'
+import reducer, { login, notificationReducer } from './blogReducer'
 
 export default combineReducers({
   blogs: reducer,
   notification: notificationReducer,
+  login: login,
 })
