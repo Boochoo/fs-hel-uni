@@ -1,5 +1,6 @@
 import blogsService from '../../services/blogs'
 import loginService from '../../services/login'
+import userService from '../../services/users'
 
 import {
   GET_BLOGS,
@@ -10,6 +11,8 @@ import {
   GET_TOKEN,
   LOG_OUT,
   CLEAR_FORM,
+  USERS,
+  ADD_COMMENT,
 } from './types'
 import { loadAuth, setAuth, removeAuth } from '../auth'
 
@@ -160,6 +163,27 @@ export const clearForm = () => {
   return async (dispatch) => {
     dispatch({
       type: CLEAR_FORM,
+    })
+  }
+}
+
+export const getUsers = () => {
+  return async (dispatch) => {
+    const users = await userService.getAll()
+    dispatch({
+      type: USERS,
+      payload: users,
+    })
+  }
+}
+
+export const addComment = (id, comment) => {
+  return async (dispatch) => {
+    const blog = await blogsService.addComment(id, comment)
+
+    dispatch({
+      type: ADD_COMMENT,
+      payload: blog,
     })
   }
 }

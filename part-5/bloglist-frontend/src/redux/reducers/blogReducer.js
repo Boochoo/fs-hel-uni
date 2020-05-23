@@ -7,7 +7,19 @@ import {
   LOGIN,
   LOG_OUT,
   CLEAR_FORM,
+  USERS,
+  ADD_COMMENT,
 } from '../actions/types'
+
+export const userReducer = (state = '', action) => {
+  switch (action.type) {
+    case USERS:
+      return action.payload
+
+    default:
+      return state
+  }
+}
 
 export const notificationReducer = (state = '', action) => {
   switch (action.type) {
@@ -63,11 +75,18 @@ const blogReducer = (state = [], action) => {
       return action.payload
 
     case CREATE_BLOG:
-      console.log([...state, action.payload])
       return [...state, action.payload]
 
     case DELETE_BLOG:
       return state.filter((blog) => blog.id !== action.payload)
+
+    case ADD_COMMENT:
+      const currentBlogId = action.payload.id
+      const updatedBlogs = state.filter((blog) =>
+        blog.id !== currentBlogId ? blog : action.payload
+      )
+
+      return updatedBlogs
 
     default:
       return state

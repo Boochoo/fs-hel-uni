@@ -44,23 +44,24 @@ const BlogForm = ({ create }) => {
           </div>
           <Button
             variant='contained'
-            color='primary'
             type='submit'
             id='create-button'
-            style={{ marginTop: 10 }}
+            style={{ marginTop: 10, marginBottom: 10 }}
           >
             Create
           </Button>
         </form>
       )}
-      <ButtonElement
-        id='create-new-button'
-        text={!formVisibility ? 'create new blog' : 'cancel'}
-        handler={(e) => {
-          e.preventDefault()
-          setFormVisibility(!formVisibility)
-        }}
-      />
+      <div style={{ marginBottom: '1rem' }}>
+        <ButtonElement
+          id='create-new-button'
+          text={!formVisibility ? 'create new blog' : 'cancel'}
+          handler={(e) => {
+            e.preventDefault()
+            setFormVisibility(!formVisibility)
+          }}
+        />
+      </div>
     </>
   )
 }

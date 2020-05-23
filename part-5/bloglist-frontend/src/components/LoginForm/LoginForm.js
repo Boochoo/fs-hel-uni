@@ -32,7 +32,7 @@ const LoginForm = ({ loginUser }) => {
       </div>
 
       <div>
-        <TextField {...password} />
+        <TextField {...password} autoComplete='off' />
       </div>
       <Button
         variant='outlined'

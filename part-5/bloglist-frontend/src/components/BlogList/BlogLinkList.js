@@ -1,17 +1,17 @@
 import React from 'react'
 
-import Blog from '../Blog/'
+import BlogLink from '../Blog/BlogLink'
 import BlogForm from '../BlogForm/'
 
-const BlogList = ({ blogs, user, handler }) => {
+const BlogLinkList = ({ blogs }) => {
   return (
     <div className='blogs-wrapper'>
       <BlogForm />
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} user={user} deleteHandler={handler} />
+        <BlogLink key={blog.id} blog={blog} />
       ))}
     </div>
   )
 }
 
-export default BlogList
+export default BlogLinkList

@@ -8,6 +8,7 @@ const ButtonElement = ({ handler, text, id }) => {
       variant='contained'
       color='primary'
       onClick={handler}
+      size='small'
     >
       {text}
     </Button>

@@ -9,3 +9,8 @@ export const GET_TOKEN = 'GET_TOKEN'
 
 export const NOTIFICATION = 'NOTIFICATION'
 export const CLEAR_FORM = 'CLEAR_FORM'
+
+export const USERS = 'USERS'
+
+export const GET_COMMENTS = 'GET_COMMENTS'
+export const ADD_COMMENT = 'ADD_COMMENT'

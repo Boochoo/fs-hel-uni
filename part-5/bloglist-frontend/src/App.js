@@ -1,27 +1,22 @@
 import React, { useEffect } from 'react'
 import { Container } from '@material-ui/core'
 import { connect } from 'react-redux'
+import { Route, Switch } from 'react-router-dom'
 
 import BlogList from './components/BlogList/'
-import NotificationMessage from './components/NotificationMessage/'
+import BlogLinkList from './components/BlogList/BlogLinkList'
 import LoginForm from './components/LoginForm/'
-import BlogForm from './components/BlogForm/'
-import ButtonElement from './components/shared/ButtonElement'
+import NotificationMessage from './components/NotificationMessage/'
+import { sortByKey } from './redux/utils/utils'
 
-import {
-  getBlogs,
-  initWithToken,
-  clearLoginToken,
-} from './redux/actions/blogActions'
+import BlogPage from './views/BlogPage'
+import MenuBar from './views/MenuBar'
+import Users from './views/Users'
+import User from './views/User'
 
-const App = ({
-  getBlogs,
-  blogs,
-  notification,
-  initWithToken,
-  user,
-  removeToken,
-}) => {
+import { getBlogs, initWithToken } from './redux/actions/blogActions'
+
+const App = ({ getBlogs, blogs, notification, initWithToken, user }) => {
   useEffect(() => {
     getBlogs()
   }, [getBlogs])
@@ -30,29 +25,26 @@ const App = ({
     initWithToken()
   }, [initWithToken])
 
-  const sortByLikes = (data) =>
-    data.sort((a, b) => {
-      return b.likes - a.likes
-    })
-
-  const onLogOut = () => removeToken()
-
   return (
     <Container>
       <NotificationMessage message={notification} />
       {!user.userData && <LoginForm />}
-
       {user.userData && (
         <div>
-          <h2>Blogs</h2>
-          <div>
-            {user.userData.name} logged in
-            <ButtonElement text='logout' handler={onLogOut} />
-          </div>
+          <MenuBar />
+          <h2>Blog app</h2>
 
-          <BlogForm />
-
-          <BlogList blogs={sortByLikes(blogs)} user={user} />
+          <Switch>
+            <Route path='/blogs/:id' component={BlogPage} />
+            <Route path='/blogs'>
+              <BlogList blogs={sortByKey(blogs, 'likes')} user={user} />
+            </Route>
+            <Route path='/users/:id' component={User} />
+            <Route path='/users' component={Users} />
+            <Route path='/'>
+              <BlogLinkList blogs={sortByKey(blogs, 'likes')} />
+            </Route>
+          </Switch>
         </div>
       )}
     </Container>
@@ -70,7 +62,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
   getBlogs: () => dispatch(getBlogs()),
   initWithToken: () => dispatch(initWithToken()),
-  removeToken: () => dispatch(clearLoginToken()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)

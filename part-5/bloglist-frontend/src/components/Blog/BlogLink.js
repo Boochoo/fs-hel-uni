@@ -3,15 +3,14 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { Card, Typography, CardContent } from '@material-ui/core'
 
-const Blog = ({ blog }) => {
+const BlogLink = ({ blog }) => {
   const { title, author, id } = blog
-
   return (
     <Card style={blogStyle} className='blog-item'>
       <CardContent>
         <Typography>
           <Link to={`/blogs/${id}`}>
-            {title}: by {author}
+            {title}: by {author}{' '}
           </Link>
         </Typography>
       </CardContent>
@@ -19,7 +18,7 @@ const Blog = ({ blog }) => {
   )
 }
 
-Blog.propTypes = {
+BlogLink.propTypes = {
   blog: PropTypes.object.isRequired,
 }
 
@@ -31,4 +30,4 @@ const blogStyle = {
   marginBottom: 5,
 }
 
-export default Blog
+export default BlogLink
