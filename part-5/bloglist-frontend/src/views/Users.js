@@ -11,7 +11,7 @@ import {
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
-import { getUsers } from '../redux/actions/loginActions'
+import { getUsers } from '../state/actions/loginActions'
 
 const Users = ({ getUsers, users }) => {
   useEffect(() => {

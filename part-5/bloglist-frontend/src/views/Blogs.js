@@ -10,11 +10,11 @@ import {
   Box,
 } from '@material-ui/core'
 
-import { deleteBlog, updateBlog } from '../redux/actions/blogActions'
+import { deleteBlog, updateBlog } from '../state/actions/blogActions'
 import ButtonElement from '../components/shared/ButtonElement'
-import CommentList from '../components/Comment'
+import CommentList from '../components/Comment/'
 
-const Blogs = ({ match, blogs, login, deleteBlog, updateBlog }) => {
+const BlogPage = ({ match, blogs, login, deleteBlog, updateBlog }) => {
   const blog = blogs.find((blog) => blog.id === match.params.id)
 
   if (!blog) return null
@@ -88,4 +88,4 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(updateBlog(blogId, updatedBlog)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Blogs)
+export default connect(mapStateToProps, mapDispatchToProps)(BlogPage)

@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 import ButtonElement from '../components/shared/ButtonElement'
 
-import { clearLoginToken } from '../redux/actions/loginActions'
+import { clearLoginToken } from '../state/actions/loginActions'
 
 const MainContainer = styled('div')`
   .menu-item {

@@ -8,15 +8,15 @@ import BlogList from './components/BlogList/'
 import BlogLinkList from './components/BlogList/BlogLinkList'
 import LoginForm from './components/LoginForm/'
 import NotificationMessage from './components/NotificationMessage/'
-import { sortByKey } from './redux/utils/utils'
+import { sortByKey } from './utils/utils'
 
 import Blogs from './views/Blogs'
 import MenuBar from './views/MenuBar'
 import Users from './views/Users'
 import User from './views/User'
 
-import { getBlogs } from './redux/actions/blogActions'
-import { initWithToken } from './redux/actions/loginActions'
+import { getBlogs } from './state/actions/blogActions'
+import { initWithToken } from './state/actions/loginActions'
 
 const GlobalStyle = createGlobalStyle`
   body {

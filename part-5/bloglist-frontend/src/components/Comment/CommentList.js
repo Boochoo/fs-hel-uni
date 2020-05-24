@@ -4,13 +4,14 @@ import { connect } from 'react-redux'
 
 import { Button, Typography, TextField, Grid, Paper } from '@material-ui/core'
 
-import { addComment } from '../../redux/actions/blogActions'
+import { addComment } from '../../state/actions/blogActions'
 
 const CommentList = ({ id, comments, addComment }) => {
   const [newComment, setNewComment] = useState('')
 
   const onAddComment = () => {
     if (newComment) {
+      console.log(newComment)
       addComment(id, { comment: newComment })
       setNewComment('')
     }
@@ -29,25 +30,26 @@ const CommentList = ({ id, comments, addComment }) => {
           Add comment
         </Button>
       </Grid>
-      {comments
-        .filter((c) => c)
-        .map((c) => (
-          <div key={generateId()}>
-            <Paper
-              style={{
-                padding: '10px',
-                marginTop: 20,
-                color: '#eff0f1',
-                background: '#0c0d0e',
-              }}
-            >
-              <Grid item xs zeroMinWidth>
-                <Typography>{c}</Typography>
-              </Grid>
-            </Paper>
-          </div>
-        ))
-        .reverse()}
+      {comments &&
+        comments
+          .filter((c) => c)
+          .map((c) => (
+            <div key={generateId()}>
+              <Paper
+                style={{
+                  padding: '10px',
+                  marginTop: 20,
+                  color: '#eff0f1',
+                  background: '#0c0d0e',
+                }}
+              >
+                <Grid item xs zeroMinWidth>
+                  <Typography>{c}</Typography>
+                </Grid>
+              </Paper>
+            </div>
+          ))
+          .reverse()}
     </Grid>
   )
 }

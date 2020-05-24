@@ -3,10 +3,10 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Button, TextField, Grid } from '@material-ui/core'
 
-import { createBlog } from '../../redux/actions/blogActions'
+import { createBlog } from '../../state/actions/blogActions'
 
-import { useField } from '../../redux/utils/useField'
-import { compose } from '../../redux/utils/utils'
+import { useField } from '../../utils/useField'
+import { compose } from '../../utils/utils'
 
 import ButtonElement from '../shared/ButtonElement'
 
