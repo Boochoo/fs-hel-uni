@@ -1,20 +1,14 @@
 import blogsService from '../../services/blogs'
-import loginService from '../../services/login'
-import userService from '../../services/users'
 
 import {
   GET_BLOGS,
   CREATE_BLOG,
   NOTIFICATION,
   DELETE_BLOG,
-  LOGIN,
-  GET_TOKEN,
-  LOG_OUT,
   CLEAR_FORM,
-  USERS,
   ADD_COMMENT,
+  UPDATE_BLOG,
 } from './types'
-import { loadAuth, setAuth, removeAuth } from '../auth'
 
 export const getBlogs = () => {
   return async (dispatch) => {
@@ -34,7 +28,7 @@ export const getBlogs = () => {
   }
 }
 
-export const create = (blog) => {
+export const createBlog = (blog) => {
   return async (dispatch) => {
     try {
       const blogData = await blogsService.create(blog)
@@ -95,84 +89,13 @@ export const deleteBlog = (blog) => {
   }
 }
 
-export const initWithToken = () => {
+export const updateBlog = (id, updatedBlog) => {
   return async (dispatch) => {
-    const userData = loadAuth()
-
-    if (userData) {
-      blogsService.setToken(userData.token)
-    } else {
-      blogsService.setToken('')
-    }
+    const blog = await blogsService.update(id, updatedBlog)
 
     dispatch({
-      type: GET_TOKEN,
-      payload: userData,
-    })
-  }
-}
-
-export const loginUser = (user) => {
-  return async (dispatch) => {
-    try {
-      const userData = await loginService.login(user)
-
-      setAuth(userData)
-
-      dispatch({
-        type: LOGIN,
-        payload: userData,
-      })
-    } catch (error) {
-      if (!user.username || !user.password) {
-        dispatch({
-          type: NOTIFICATION,
-          notification: 'Username and password need to be filled',
-        })
-      } else {
-        dispatch({
-          type: NOTIFICATION,
-          notification: error.message,
-        })
-      }
-    }
-
-    setTimeout(() => {
-      dispatch({
-        type: NOTIFICATION,
-        notification: '',
-      })
-    }, 2000)
-  }
-}
-
-export const clearLoginToken = () => {
-  return async (dispatch) => {
-    await blogsService.setToken('')
-
-    removeAuth()
-
-    dispatch({
-      type: LOG_OUT,
-      payload: null,
-    })
-  }
-}
-
-export const clearForm = () => {
-  return async (dispatch) => {
-    dispatch({
-      type: CLEAR_FORM,
-    })
-  }
-}
-
-export const getUsers = () => {
-  return async (dispatch) => {
-    const users = await userService.getAll()
-    dispatch({
-      type: USERS,
-      payload: users,
+      type: UPDATE_BLOG,
+      payload: blog,
     })
   }
 }
@@ -184,6 +107,14 @@ export const addComment = (id, comment) => {
     dispatch({
       type: ADD_COMMENT,
       payload: blog,
+    })
+  }
+}
+
+export const clearForm = () => {
+  return async (dispatch) => {
+    dispatch({
+      type: CLEAR_FORM,
     })
   }
 }

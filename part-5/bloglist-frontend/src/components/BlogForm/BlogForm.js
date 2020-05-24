@@ -1,16 +1,16 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Button, TextField } from '@material-ui/core'
+import { Button, TextField, Grid } from '@material-ui/core'
 
-import { create, clearForm } from '../../redux/actions/blogActions'
+import { createBlog } from '../../redux/actions/blogActions'
 
 import { useField } from '../../redux/utils/useField'
 import { compose } from '../../redux/utils/utils'
 
 import ButtonElement from '../shared/ButtonElement'
 
-const BlogForm = ({ create }) => {
+const BlogForm = ({ createBlog }) => {
   const { reset: resetTitle, ...title } = useField('title')
   const { reset: resetAuthor, ...author } = useField('author')
   const { reset: resetUrl, ...url } = useField('url')
@@ -20,7 +20,7 @@ const BlogForm = ({ create }) => {
   const handleSubmit = (event) => {
     event.preventDefault()
 
-    create({ title: title.value, author: author.value, url: url.value })
+    createBlog({ title: title.value, author: author.value, url: url.value })
 
     if (!title.value || !author.value || !url.value) return null
 
@@ -33,15 +33,15 @@ const BlogForm = ({ create }) => {
       {formVisibility && (
         <form onSubmit={handleSubmit}>
           <h3>Create new</h3>
-          <div>
+          <Grid>
             <TextField {...title} />
-          </div>
-          <div>
+          </Grid>
+          <Grid>
             <TextField {...author} />
-          </div>
-          <div>
+          </Grid>
+          <Grid>
             <TextField {...url} />
-          </div>
+          </Grid>
           <Button
             variant='contained'
             type='submit'
@@ -67,8 +67,7 @@ const BlogForm = ({ create }) => {
 }
 
 BlogForm.propTypes = {
-  create: PropTypes.func.isRequired,
-  // formHandler: PropTypes.func.isRequired,
+  createBlog: PropTypes.func.isRequired,
 }
 
-export default connect(null, { create, clearForm })(BlogForm)
+export default connect(null, { createBlog })(BlogForm)

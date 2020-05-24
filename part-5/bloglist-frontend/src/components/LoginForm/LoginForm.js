@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Button, TextField } from '@material-ui/core'
 import { connect } from 'react-redux'
 
-import { loginUser } from '../../redux/actions/blogActions'
+import { loginUser } from '../../redux/actions/loginActions'
 import { useField } from '../../redux/utils/useField'
 import { compose } from '../../redux/utils/utils'
 

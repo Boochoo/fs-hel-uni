@@ -6,13 +6,12 @@ import {
   TableHead,
   TableCell,
   TableBody,
-  Container,
   Typography,
 } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
-import { getUsers } from '../redux/actions/blogActions'
+import { getUsers } from '../redux/actions/loginActions'
 
 const Users = ({ getUsers, users }) => {
   useEffect(() => {
@@ -20,7 +19,7 @@ const Users = ({ getUsers, users }) => {
   }, [getUsers])
 
   return (
-    <Container>
+    <>
       <Typography variant='h5' component='h2'>
         Users
       </Typography>
@@ -47,7 +46,7 @@ const Users = ({ getUsers, users }) => {
           </TableBody>
         </Table>
       </TableContainer>
-    </Container>
+    </>
   )
 }
 

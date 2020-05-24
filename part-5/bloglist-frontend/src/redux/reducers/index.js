@@ -1,10 +1,13 @@
 import { combineReducers } from 'redux'
 
-import reducer, { login, notificationReducer, userReducer } from './blogReducer'
+import blogReducer from './blogReducer'
+import loginReducer from './loginReducer'
+import userReducer from './userReducer'
+import notificationReducer from './notificationReducer'
 
 export default combineReducers({
-  blogs: reducer,
+  blogs: blogReducer,
   notification: notificationReducer,
-  login: login,
+  login: loginReducer,
   users: userReducer,
 })
