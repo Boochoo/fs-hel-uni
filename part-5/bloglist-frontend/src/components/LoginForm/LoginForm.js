@@ -1,40 +1,62 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Button, TextField } from '@material-ui/core'
+import { connect } from 'react-redux'
 
-import Input from '../Input/'
+import { loginUser } from '../../state/actions/loginActions'
+import { useField } from '../../utils/useField'
+import { compose } from '../../utils/utils'
 
-const LoginForm = ({
-  handleSubmit,
-  usernameHandler,
-  passwordHandler,
-  username,
-  password,
-}) => {
+const LoginForm = ({ loginUser }) => {
+  const { reset: resetUsername, ...username } = useField('username')
+  const { reset: resetPassword, ...password } = useField('password', 'password')
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+
+    loginUser({
+      username: username.value,
+      password: password.value,
+    })
+
+    if (username.value && password.value) {
+      compose(resetUsername, resetPassword)
+    }
+  }
+
   return (
     <form onSubmit={handleSubmit}>
-      <Input
-        inputName='username'
-        value={username}
-        inputHandle={usernameHandler}
-      />
-      <Input
-        inputName='password'
-        value={password}
-        inputHandle={passwordHandler}
-      />
-      <button type='submit' id='login-button'>
+      <h2>Login to application</h2>
+      <div>
+        <TextField {...username} />
+      </div>
+
+      <div>
+        <TextField {...password} autoComplete='off' />
+      </div>
+      <Button
+        variant='outlined'
+        color='primary'
+        type='submit'
+        id='login-button'
+        style={{ marginTop: '1.25rem' }}
+      >
         login
-      </button>
+      </Button>
     </form>
   )
 }
 
 LoginForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
-  usernameHandler: PropTypes.func.isRequired,
-  passwordHandler: PropTypes.func.isRequired,
-  username: PropTypes.string.isRequired,
-  password: PropTypes.string.isRequired,
+  loginUser: PropTypes.func.isRequired,
 }
 
-export default LoginForm
+const mapStateToProps = (state) => ({
+  user: state.login,
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  loginUser: (user) => dispatch(loginUser(user)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginForm)
