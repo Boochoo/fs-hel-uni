@@ -1,0 +1,79 @@
+# Write your query or mutation here
+
+query task_8_1 {
+  booksCount
+  authorsCount
+}
+
+query task_8_2 {
+  allBooks {
+    title
+    author
+    published
+    genres
+  }
+}
+
+query task_8_3 {
+  allAuthors {
+    name
+    booksCount
+  }
+
+  findAuthor(name: "Martin Fowler") {
+    born
+  }
+}
+query task_8_4 {
+  allBooks(author: "Robert Martin") {
+    title
+  }
+}
+
+query task_8_5 {
+  allBooks(genre: "refactoring") {
+    title
+    author
+  }
+}
+
+query task_8_5_combo {
+  allBooks(author: "Robert Martin", genre: "refactoring") {
+    title
+    author
+  }
+}
+
+mutation task_8_6 {
+  book_1: addBook(
+    title: "NoSQL Distilled"
+    author: "Martin Fowler"
+    published: 2012
+    genres: ["database", "nosql"]
+  ) {
+    title
+    author
+  }
+
+  book_2: addBook(
+    title: "Pimeyden tango"
+    author: "Reijo Mäki"
+    published: 1997
+    genres: ["crime"]
+  ) {
+    title
+    author
+  }
+}
+
+mutation task_8_7 {
+  shouldBeNull: editAuthor(name: "Reijo Mäki", born: 1958) {
+    name
+    born
+  }
+
+  shouldUpdate: editAuthor(name: "Martin Fowler", born: 1958) {
+    name
+    born
+  }
+}
