@@ -1,0 +1,24 @@
+{
+  "name": "graphql",
+  "version": "0.1.0",
+  "description": "graphql",
+  "main": "index.js",
+  "author": "boochoo",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.0.0-beta.50",
+    "apollo-server": "^2.13.1",
+    "dotenv": "^8.2.0",
+    "graphql": "^15.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.16",
+    "mongoose-unique-validator": "^2.0.3",
+    "uuid": "^8.1.0"
+  }
+}
