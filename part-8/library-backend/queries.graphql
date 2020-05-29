@@ -1,4 +1,5 @@
 # Write your query or mutation here
+#  "start": "concurrently \"react-scripts start\" \"cd ../books-authors-graphql && yarn && yarn dev\"",
 
 query task_8_1 {
   booksCount
@@ -75,5 +76,17 @@ mutation task_8_7 {
   shouldUpdate: editAuthor(name: "Martin Fowler", born: 1958) {
     name
     born
+  }
+}
+
+mutation CreateUserMutation($username: String! = "funu") {
+  createUser(username: $username) {
+    id
+  }
+}
+
+mutation login {
+  login(username: "ermi", password: "password") {
+    value
   }
 }
