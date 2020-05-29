@@ -1,6 +1,3 @@
-# Write your query or mutation here
-#  "start": "concurrently \"react-scripts start\" \"cd ../books-authors-graphql && yarn && yarn dev\"",
-
 query task_8_1 {
   booksCount
   authorsCount
