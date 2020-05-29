@@ -1,0 +1,21 @@
+{
+  "name": "typescript",
+  "version": "0.1.0",
+  "main": "index.js",
+  "author": "boochoo",
+  "license": "MIT",
+  "scripts": {
+    "dev": "ts-node -- index.ts",
+    "multiply": "ts-node -- multiplier.ts",
+    "calculate": "ts-node -- bmiCalculator.ts",
+    "buffy": "ts-node -- exerciseCalculator.ts"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.3"
+  },
+  "devDependencies": {
+    "@types/node": "^14.0.5"
+  }
+}
