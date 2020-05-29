@@ -1,26 +1,40 @@
-type Operation = 'multiply' | 'add' | 'divide'
-type Result = number
+import express from 'express'
 
-const calculator = (a: number, b: number, op: Operation): Result => {
-  switch (op) {
-    case 'add':
-      return a + b
+import { BMICalculator, BMIStatus } from './bmi-calculator'
 
-    case 'divide':
-      return a / b
+const app = express()
 
-    case 'multiply':
-      if (b === 0) throw new Error(`cant be divided`)
+app.get('/ping', (_req, res) => {
+  res.send('pong')
+})
 
-      return a * b
+app.get('/hello', (_req, res) => {
+  res.send('Hello FullStack!!!')
+})
 
-    default:
-      throw new Error('operation is nt multiply, add or divide')
+app.get('/bmi', (req, res) => {
+  try {
+    const weight = Number(req.query.weight)
+    const height = Number(req.query.height)
+
+    if (!weight || !height) throw new Error('malformatted parameters')
+
+    const bmi = BMICalculator(weight, height)
+
+    res.json({
+      weight,
+      height,
+      bmi: BMIStatus(bmi),
+    })
+  } catch (err) {
+    res.json({
+      error: err.message,
+    })
   }
-}
+})
 
-try {
-  console.log('hmmm ', calculator(1, 0, 'divide'))
-} catch (e) {
-  console.log('something went terribly wrong', e.message)
-}
+const PORT = 3003
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
+})

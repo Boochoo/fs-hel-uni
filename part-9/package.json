@@ -5,7 +5,7 @@
   "author": "boochoo",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node -- index.ts",
+    "dev": "ts-node-dev index.ts",
     "multiply": "ts-node -- multiplier.ts",
     "calculate": "ts-node -- bmiCalculator.ts",
     "buffy": "ts-node -- exerciseCalculator.ts"
@@ -16,6 +16,8 @@
     "typescript": "^3.9.3"
   },
   "devDependencies": {
-    "@types/node": "^14.0.5"
+    "@types/express": "^4.17.6",
+    "@types/node": "^14.0.5",
+    "ts-node-dev": "^1.0.0-pre.44"
   }
 }
