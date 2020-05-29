@@ -1,49 +1,30 @@
 import React, { useState } from 'react'
-import { useMutation, gql } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 
-const ADD_BOOK = gql`
-  mutation createBook(
-    $title: String!
-    $published: Int!
-    $author: String!
-    $genres: [String!]!
-  ) {
-    addBook(
-      title: $title
-      published: $published
-      author: $author
-      genres: $genres
-    ) {
-      title
-      published
-      author
-      genres
-      id
-    }
-  }
-`
+import { ALL_BOOKS } from '../graphql/queries'
+import { ADD_BOOK } from '../graphql/mutations'
 
-const NewBook = (props) => {
+const NewBook = ({ setError, updateCacheWith }) => {
   const [title, setTitle] = useState('')
   const [author, setAuhtor] = useState('')
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
 
-  const [createBook] = useMutation(
-    ADD_BOOK
-  ) /* , {
-    refetchQueries: [{query: ALL_BOOKS}]
-  } */
-
-  if (!props.show) {
-    return null
-  }
+  const [createBook] = useMutation(ADD_BOOK, {
+    refetchQueries: [{ query: ALL_BOOKS }],
+    onError: (error) => {
+      setError(error.graphQLErrors[0].message)
+    },
+    update: (store, { data }) => {
+      updateCacheWith(data.addBook)
+    },
+  })
 
   const submit = async (event) => {
     event.preventDefault()
 
-    createBook({
+    await createBook({
       variables: {
         title,
         author,
