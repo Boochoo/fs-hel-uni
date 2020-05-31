@@ -8,8 +8,8 @@ const getDiagnoses = (): Array<Diagnose> => {
   return diagnoses;
 };
 
-const addDiagnose = () => {
-  return null;
+const addDiagnose = (): [] => {
+  return [];
 };
 
 export default {
