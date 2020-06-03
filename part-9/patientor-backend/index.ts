@@ -24,8 +24,8 @@ const options: cors.CorsOptions = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-app.use(cors(options));
 app.use(express.json());
+app.use(cors(options));
 
 console.log('object');
 
@@ -37,8 +37,8 @@ app.get('/api/ping', (_req, res) => {
   res.send('pong');
 });
 
+app.use('/api/diagnosis', diagnoseRouter);
 app.use('/api/patients', patientRouter);
-app.use('/api/diagnoses', diagnoseRouter);
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
 router.options('*', cors(options));

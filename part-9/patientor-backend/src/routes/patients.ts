@@ -6,7 +6,7 @@ import { toNewPatientEntry } from '../../utils/utils';
 const patientRouter = express.Router();
 
 patientRouter.get('/', (_req, res) => {
-  res.json(patientService.getNonSensitivePatientsData());
+  res.json(patientService.getNonSensitivePatients());
 });
 
 patientRouter.post('/', (req, res) => {
@@ -19,6 +19,8 @@ patientRouter.post('/', (req, res) => {
 
 patientRouter.get('/:id', (req, res) => {
   const patient = patientService.findById(req.params.id);
+
+  console.log(patient);
 
   if (patient) {
     res.send(patient);
